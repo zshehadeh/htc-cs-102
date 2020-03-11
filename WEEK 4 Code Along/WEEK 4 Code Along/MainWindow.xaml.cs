@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace WEEK_4_Code_Along
 {
@@ -21,23 +22,40 @@ namespace WEEK_4_Code_Along
     public partial class MainWindow : Window
     {
 
-        private List<Movie> movieList;
+        private ObservableCollection<Movie> movieList;
         
         
         public MainWindow()
         {
             InitializeComponent();
-            movieList = new List<Movie>();
+            movieList = new ObservableCollection<Movie>();
+            lvMovies.ItemsSource = movieList;
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            Movie movie = new Movie(titleInput.Text, Convert.ToInt32(releaseYearInput.Text));
 
-            movieList.Add(movie);
+            
+            Movie movie = new Movie(titleInput.Text, Convert.ToInt32(releaseYearInput.Text), Convert.ToDouble(rottenInput.Text));
+
+            int x = 0;
+
+            foreach (Movie movie23 in movieList)
+            {
+                if(movie23.Title == movie.Title) 
+                { 
+                    MessageBox.Show("THERE IS A DUPLICATE!");
+                    x++;
+                }
+
+            }
+
+            if (x == 0) { movieList.Add(movie); }
+            
 
             titleInput.Clear();
             releaseYearInput.Clear();
+            rottenInput.Clear();
 
         }
 
@@ -49,5 +67,17 @@ namespace WEEK_4_Code_Along
             }
 
         }
+
+        private void lvMovies_MouseDoubleClick( object sender, MouseButtonEventArgs e)
+        {
+            Movie selectedMovie = lvMovies.SelectedItem as Movie;
+            if (selectedMovie != null)
+                {
+                selectedMovie.ShowDetails();
+                }
+
+
+        }
+
     }
 }
